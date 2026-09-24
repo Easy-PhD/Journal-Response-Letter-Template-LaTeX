@@ -1,0 +1,205 @@
+\ProvidesPackage{responsereview}[2026/09/25 Review Response v2.0]
+% Author: Karl-Ludwig Besser (original)
+% Email: k.besser@tu-bs.de
+% URL: https://www.overleaf.com/latex/templates/review-response-template/tmbvmjstxwrd
+%
+% Author: Liwenhan Xie
+% Email: xieliwenhan@yahoo.com
+% URL: https://github.com/shellywhen/Journal-Response-Letter-Template-LaTeX
+%
+% Updated and refactored by NextAI
+% Author: NextAI
+% Email: nextartifintell@gmail.com
+% Date: 2026/09/25
+%
+% Summary of changes in v2.0:
+% - Removed hard-coded page layout settings to avoid conflicts with geometry
+% - Removed duplicate \bfseries in section titles
+% - Fixed opacity/boxrule redundancy in tcolorbox environments
+% - Changed changes environment to use visible left bar
+% - Made baselinestretch user-overridable
+% - Added proper English comments
+% - Added tableofcontents
+% - Added ability to specify custom reviewer numbers (e.g., 2, 3, 4, 5, 7 without 1 and 6)
+
+\RequirePackage{kvoptions}
+\RequirePackage[breakable,skins]{tcolorbox}
+\RequirePackage{xcolor}
+
+%============================================================================%
+%% Package Options
+\DeclareStringOption{editor}
+\DeclareStringOption{journal}
+\DeclareStringOption{manuscript}
+\ProcessKeyvalOptions*
+
+%============================================================================%
+%% Variables
+% Store package option values for user access
+\let\editorname\responsereview@editor
+\let\journal\responsereview@journal
+\let\manuscript\responsereview@manuscript
+
+% Title/author/date are defined at \begin{document}, so we use
+% \AtBeginDocument to defer their definition
+\AtBeginDocument{%
+  \newcommand*{\thetitle}{\@title}
+  \newcommand*{\theauthor}{\@author}
+  \newcommand*{\thedate}{\@date}
+}
+
+%============================================================================%
+%% Counters
+\newcounter{reviewer@counter}
+\setcounter{reviewer@counter}{0}
+\newcounter{reviewcomment@counter}[reviewer@counter]
+\setcounter{reviewcomment@counter}{0}
+% Counter for numbering comments within each reviewer
+\newcounter{reviewcomment@number}
+\setcounter{reviewcomment@number}{0}
+
+%============================================================================%
+%% Title Page
+\renewcommand*{\maketitle}{%
+  \begin{titlepage}
+    \begin{center}
+      \vspace*{1cm}
+      \large{Response to Reviewers' Comments for Manuscript \responsereview@manuscript}\\
+
+      \vspace{1cm}
+      \textbf{\LARGE{\@title}}\\
+      \vspace{1cm}
+      \large{Addressed Comments for Publication to}
+
+      \Large{\responsereview@journal}
+
+      \large{by}
+
+      {\large{\@author}}
+    \end{center}
+  \end{titlepage}
+}
+
+%============================================================================%
+%% Section Commands
+% Meta-review (editor) section
+\newcommand{\editor}{%
+  \clearpage
+  \section*{\textbf{Response to the Editor}}
+  \addcontentsline{toc}{section}{Response to the Editor}
+  \markboth{RESPONSE TO THE EDITOR}%
+           {}%
+}
+
+% Individual reviewer section - accepts a number parameter
+\newcommand{\reviewer}[1]{%
+  \clearpage
+  % Store the reviewer number for use in comments and responses
+  \def\reviewer@number{#1}%
+  % Reset comment counter for this reviewer
+  \setcounter{reviewcomment@number}{0}%
+  \section*{\textbf{Response to Reviewer \reviewer@number}}
+  \addcontentsline{toc}{section}{Response to Reviewer \reviewer@number}
+  \markboth{RESPONSE TO REVIEWER \reviewer@number}%
+           {}%
+}
+
+%============================================================================%
+%% tcolorbox Environments
+% Editor comment - general/summary comment
+\newenvironment{generalcomment}{%
+  \refstepcounter{reviewcomment@counter}
+  \edef\@currentlabel{Summary Comment \arabic{reviewcomment@counter}}
+  \begin{tcolorbox}[
+    breakable=false,
+    adjusted title={Summary Comment \arabic{reviewcomment@counter}},
+    fonttitle={\bfseries},
+    enhanced,
+    boxrule=0pt,
+    colback=red!5!white,  % background
+    colframe=red!15!white,  % frame
+    coltitle=red!20!black,  % title
+    colbacktitle=red!20!white,  % title
+    colupper=black,
+    collower=black,
+    drop fuzzy shadow,
+  ]
+}{%
+  \end{tcolorbox}
+}
+
+% Response to the editor comment
+\newenvironment{revmeta}[1][{Thank you for the comment.}]{%
+  \edef\@currentlabel{Response SC \arabic{reviewcomment@counter}}
+  \textbf{Response SC \arabic{reviewcomment@counter}:} #1\par
+}{%
+  \vspace{1em}
+}
+
+%============================================================================%
+%% tcolorbox Environments
+% Individual reviewer comment - uses the provided reviewer number
+\newenvironment{revcomment}[1][]{%
+  \stepcounter{reviewcomment@number}%
+  \edef\@currentlabel{Comment \reviewer@number.\arabic{reviewcomment@number}}
+  \begin{tcolorbox}[
+    breakable=false,
+    adjusted title={Comment \reviewer@number.\arabic{reviewcomment@number}},
+    fonttitle={\bfseries},
+    enhanced,
+    boxrule=0pt,
+    colback=blue!5!white,  % background
+    colframe=blue!15!white,  % frame
+    coltitle=blue!20!black,  % title
+    colbacktitle=blue!20!white,  % title
+    colupper=black,
+    collower=black,
+    drop fuzzy shadow,
+    #1
+  ]
+}{%
+  \end{tcolorbox}
+}
+
+% Response to a reviewer comment
+\newenvironment{revresponse}[1][{Thank you for the comment.}]{%
+  \edef\@currentlabel{Response \reviewer@number.\arabic{reviewcomment@number}}
+  \noindent\textbf{Response \reviewer@number.\arabic{reviewcomment@number}:} #1\par
+}{%
+  \vspace{1em}
+}
+
+%============================================================================%
+%% tcolorbox Environments
+% Environment for highlighting changes made in the manuscript
+% Features a visible green left bar
+\newenvironment{changes}{%
+  \begin{tcolorbox}[
+    breakable=true,
+    use color stack,
+    left skip=0em,
+    enhanced,
+    colframe=green!35!white,
+    boxrule=0.1em,
+    leftrule=1.5em,
+    colback=green!15!white,
+    opacityback=1,
+    opacityframe=1,
+    colupper=black,
+    collower=black,
+    drop fuzzy shadow,
+  ]
+  \color{darkgray}
+}{%
+  \end{tcolorbox}
+}
+
+%============================================================================%
+%% Bibliography Helper
+% Print bibliography for a specific refsection (e.g., per reviewer)
+\newcommand{\printpartbibliography}[1]{%
+  \begin{refsegment}
+    \nocite{#1}
+    \printbibliography[heading=none, segment=\therefsegment]
+  \end{refsegment}
+}

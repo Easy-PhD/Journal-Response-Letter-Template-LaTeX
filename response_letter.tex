@@ -1,0 +1,139 @@
+%% TexLive 2026
+\documentclass[12pt,american]{article}
+
+%% Review Response Package
+\usepackage[editor={Editor and Reviewers},
+            journal={Journal of Machine Learning Research},
+            manuscript={JMLR-26-0001}]{responsereview}
+
+%% Geometry
+\usepackage[a4paper,
+            total={160mm,245mm},
+            left=25mm,
+            top=25mm,
+            headheight=14.5pt,
+            includehead]{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\renewcommand{\headrulewidth}{.5pt}
+\renewcommand{\footrulewidth}{.5pt}
+
+%% Font
+\usepackage[T1]{fontenc}
+\usepackage{fourier}
+\usepackage{babel}
+\usepackage[babel]{microtype}
+\usepackage[babel]{csquotes}
+
+%% Math
+\usepackage{amsmath,amsfonts}
+\usepackage{bm}
+
+%% Lists
+\usepackage[shortlabels]{enumitem}
+\newlist{detail}{itemize}{3}
+\setlist[detail,1]{label=\textbullet, leftmargin=21pt, nosep}
+
+%% Table
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{threeparttable}
+\usepackage{arydshln}
+
+%% Figure
+\usepackage{caption}
+\usepackage{subcaption}
+
+%% Hyperref
+\usepackage[hypertexnames=false]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,
+    urlcolor=blue,
+    citecolor=blue,
+    pdfborder={0 0 0}}
+
+%% Bibliography
+\usepackage[backend=biber,
+            style=ieee,
+            dashed=false,
+            url=false,
+            isbn=false,
+            defernumbers=true,
+            refsection=section]{biblatex}
+\addbibresource{bibs/abbr.bib}
+
+%% Metadata
+\title{Title}
+\author{Author}
+\date{\today}
+
+\begin{document}
+
+%% Cover Page (no page number)
+\pagenumbering{gobble}
+\maketitle
+
+%% Cover Letter
+\thispagestyle{empty}
+\noindent Dear \editorname,
+
+\medskip
+
+Please find attached the revised version of our previous submission entitled \textbf{\enquote{\thetitle}} with manuscript number \textbf{\manuscript}. First and foremost, we greatly appreciate the valuable comments and constructive suggestions provided by all the reviewers, which have helped us significantly improve the quality of our paper. We are also grateful to the editor for encouraging us to resubmit a revised version. In this revision, we have carefully addressed all the reviewers' comments. To make our responses as clear as possible, we provide below a summary of the main modifications and a detailed point‑by‑point response to the comments from Reviewers 2, 3, 4, 5, and 7, following the order in the decision letter.
+
+\vspace{6em}
+
+\noindent Sincerely,
+
+\medskip
+
+\noindent\theauthor
+
+\medskip
+
+\noindent\thedate
+
+\vfill
+
+\textbf{Note:} To enhance the legibility of this response letter, all the editor's and reviewers' comments are typeset in boxes. Rephrased or added sentences are typeset in color. The respective parts in the manuscript are highlighted to indicate changes.
+\clearpage
+
+\tableofcontents
+
+\clearpage
+
+%% Main Body (page numbering starts from 1)
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+%% Header/Footer
+\pagestyle{fancy}
+\fancyfoot[R]{\thepage}
+\fancyfoot[L]{Response Letter for \manuscript}
+\fancyfoot[C]{}
+
+%% Review Responses
+\input{texs/major_editor.tex} % Should start with \editor
+
+\input{texs/major_r2.tex} % Should start with \reviewer
+% \printbibliography[heading=subbibliography, title={}]
+
+\input{texs/major_r3.tex} % Should start with \reviewer
+\printbibliography[heading=subbibliography, title={}]
+
+\input{texs/major_r4.tex} % Should start with \reviewer
+\printbibliography[heading=subbibliography, title={}]
+
+\input{texs/major_r5.tex} % Should start with \reviewer
+% \printbibliography[heading=subbibliography, title={}]
+
+\input{texs/major_r7.tex} % Should start with \reviewer
+% \printbibliography[heading=subbibliography, title={}]
+
+\end{document}
